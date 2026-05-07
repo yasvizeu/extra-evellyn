@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evellyn's Practice</title>
+
+  <style>
+    :root{
+      --bg:#05002E;
+      --bg2:#0B0638;
+      --card:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.12);
+      --purple:#8A7CFF;
+      --purple2:#3B2C73;
+      --orange:#C9823B;
+      --text:#F5F5F7;
+      --muted:#c8c1e9;
+      --green:#7EE0A8;
+      --red:#FF8C8C;
+      --paper:#F8F5EE;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Inter, sans-serif;
+      background:
+      radial-gradient(circle at top left, rgba(138,124,255,.16), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(201,130,59,.12), transparent 25%),
+      linear-gradient(145deg,#020018,var(--bg),var(--bg2));
+
+      color:var(--text);
+      min-height:100vh;
+      padding:32px 16px 80px;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:auto;
+    }
+
+    .hero{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      border-radius:36px;
+      padding:50px;
+      position:relative;
+      overflow:hidden;
+      margin-bottom:24px;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:300px;
+      height:300px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:50%;
+      right:-120px;
+      top:-120px;
+    }
+
+    .eyebrow{
+      color:var(--orange);
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:.75rem;
+      font-weight:700;
+      margin-bottom:14px;
+    }
+
+    h1{
+      font-size:clamp(3rem,8vw,6rem);
+      line-height:.9;
+      letter-spacing:-.06em;
+      margin-bottom:18px;
+    }
+
+    .script{
+      color:var(--purple);
+      font-style:italic;
+    }
+
+    .hero p{
+      max-width:700px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:1.05rem;
+    }
+
+    .progress{
+      margin:24px 0 36px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
+      position:sticky;
+      top:10px;
+      backdrop-filter:blur(12px);
+      z-index:10;
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:12px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .bar{
+      height:12px;
+      background:rgba(255,255,255,.08);
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--purple),var(--orange));
+      transition:.3s;
+    }
+
+    .section-title{
+      margin:50px 0 18px;
+    }
+
+    .section-title span{
+      color:var(--orange);
+      text-transform:uppercase;
+      letter-spacing:.15em;
+      font-size:.72rem;
+      font-weight:700;
+    }
+
+    .section-title h2{
+      font-size:clamp(2rem,4vw,3.2rem);
+      letter-spacing:-.05em;
+      margin-top:6px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:28px;
+    }
+
+    .paper{
+      background:var(--paper);
+      color:#1B163D;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .paper::before{
+      content:"";
+      position:absolute;
+      width:70px;
+      height:18px;
+      background:rgba(201,130,59,.25);
+      top:14px;
+      right:30px;
+      transform:rotate(5deg);
+    }
+
+    .dialogue{
+      display:grid;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .line{
+      background:rgba(59,44,115,.08);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .line strong{
+      color:#3B2C73;
+    }
+
+    .exercise{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    .question{
+      font-weight:700;
+      margin-bottom:14px;
+      line-height:1.5;
+    }
+
+    .options{
+      display:grid;
+      gap:10px;
+    }
+
+    button.option{
+      border:none;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text);
+      padding:13px;
+      border-radius:16px;
+      cursor:pointer;
+      text-align:left;
+      transition:.2s;
+      font-size:.95rem;
+    }
+
+    button.option:hover{
+      transform:translateX(3px);
+      background:rgba(255,255,255,.1);
+    }
+
+    .correct{
+      background:rgba(126,224,168,.18)!important;
+      border-color:rgba(126,224,168,.5)!important;
+    }
+
+    .wrong{
+      background:rgba(255,140,140,.14)!important;
+      border-color:rgba(255,140,140,.4)!important;
+    }
+
+    .feedback{
+      margin-top:12px;
+      font-size:.92rem;
+      min-height:18px;
+    }
+
+    input{
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:white;
+      margin-top:10px;
+      font-size:1rem;
+    }
+
+    .check{
+      margin-top:10px;
+      border:none;
+      background:var(--orange);
+      color:#140A1F;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .routine-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:20px;
+    }
+
+    .routine{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+    }
+
+    .routine strong{
+      display:block;
+      color:var(--orange);
+      margin-bottom:8px;
+    }
+
+    .final{
+      text-align:center;
+      padding:50px;
+      margin-top:40px;
+    }
+
+    .final h2{
+      font-size:3rem;
+      letter-spacing:-.05em;
+      margin-bottom:14px;
+    }
+
+    .final p{
+      color:var(--muted);
+      max-width:650px;
+      margin:auto;
+      line-height:1.7;
+    }
+
+    @media(max-width:900px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .routine-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero{
+        padding:32px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <section class="hero">
+    <div class="eyebrow">
+      Daily Routines + Simple Present
+    </div>
+
+    <h1>
+      Evellyn’s <br>
+      <span class="script">Practice ✦</span>
+    </h1>
+
+    <p>
+      Today we are going to practice daily routines, the most common verbs
+      and simple present conjugation.
+      Read everything calmly and say the sentences out loud.
+    </p>
+  </section>
+
+  <section class="progress">
+    <div class="progress-top">
+      <span id="progressText">0 / 20 completed</span>
+      <span id="percent">0%</span>
+    </div>
+
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <span>Daily Routines</span>
+      <h2>Main Daily Routine Verbs</h2>
+    </div>
+
+    <div class="routine-grid">
+
+      <div class="routine">
+        <strong>☀️ Wake up</strong>
+        I wake up at 8 AM.
+      </div>
+
+      <div class="routine">
+        <strong>🛏️ Get up</strong>
+        I get up at 8:10.
+      </div>
+
+      <div class="routine">
+        <strong>🪥 Brush my teeth</strong>
+        I brush my teeth in the morning.
+      </div>
+
+      <div class="routine">
+        <strong>🚿 Take a shower</strong>
+        I take a shower before work.
+      </div>
+
+      <div class="routine">
+        <strong>🍳 Eat breakfast</strong>
+        I eat breakfast every day.
+      </div>
+
+      <div class="routine">
+        <strong>📚 Study English</strong>
+        I study English at night.
+      </div>
+
+      <div class="routine">
+        <strong>📺 Watch TV</strong>
+        I watch TV after dinner.
+      </div>
+
+      <div class="routine">
+        <strong>😴 Sleep</strong>
+        I sleep at 11 PM.
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+
+    <div class="section-title">
+      <span>Dialogue</span>
+      <h2>Evellyn’s Daily Routine</h2>
+    </div>
+
+    <div class="grid">
+
+      <div class="card paper">
+
+        <div class="dialogue">
+
+          <div class="line">
+            <strong>Yasmin:</strong>
+            Hi Evellyn! What time do you wake up?
+          </div>
+
+          <div class="line">
+            <strong>Evellyn:</strong>
+            I wake up at 8 AM, but I only get up at 8:30.
+          </div>
+
+          <div class="line">
+            <strong>Yasmin:</strong>
+            What do you do after that?
+          </div>
+
+          <div class="line">
+            <strong>Evellyn:</strong>
+            I brush my teeth and take a shower.
+          </div>
+
+          <div class="line">
+            <strong>Yasmin:</strong>
+            Do you eat breakfast?
+          </div>
+
+          <div class="line">
+            <strong>Evellyn:</strong>
+            Yes, I do. I usually eat eggs and drink coffee.
+          </div>
+
+          <div class="line">
+            <strong>Yasmin:</strong>
+            Do you study English every day?
+          </div>
+
+          <div class="line">
+            <strong>Evellyn:</strong>
+            Yes! I study English at night and I watch videos in English too.
+          </div>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <!-- 1 -->
+        <div class="exercise">
+          <div class="question">
+            1. What time does Evellyn wake up?
+          </div>
+
+          <div class="options">
+            <button class="option" data-correct="true">8 AM</button>
+            <button class="option">10 AM</button>
+            <button class="option">11 PM</button>
+          </div>
+
+          <div class="feedback"></div>
+        </div>
+
+        <!-- 2 -->
+        <div class="exercise">
+          <div class="question">
+            2. What does she do after waking up?
+          </div>
+
+          <div class="options">
+            <button class="option">She watches TV.</button>
+            <button class="option" data-correct="true">
+              She brushes her teeth and takes a shower.
+            </button>
+            <button class="option">She sleeps again.</button>
+          </div>
+
+          <div class="feedback"></div>
+        </div>
+
+        <!-- 3 -->
+        <div class="exercise">
+          <div class="question">
+            3. Does Evellyn study English every day?
+          </div>
+
+          <div class="options">
+            <button class="option" data-correct="true">
+              Yes, she does.
+            </button>
+            <button class="option">No, she doesn’t.</button>
+          </div>
+
+          <div class="feedback"></div>
+        </div>
+
+        <!-- 4 -->
+        <div class="exercise">
+          <div class="question">
+            4. She ___ breakfast every morning.
+          </div>
+
+          <div class="options">
+            <button class="option">eat</button>
+            <button class="option" data-correct="true">eats</button>
+          </div>
+
+          <div class="feedback"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <div class="section-title">
+      <span>Exercises</span>
+      <h2>Simple Present Practice</h2>
+    </div>
+
+    <div id="exerciseList">
+
+      <!-- 5 -->
+      <div class="exercise">
+        <div class="question">
+          5. I ___ English every night.
+        </div>
+
+        <div class="options">
+          <button class="option" data-correct="true">study</button>
+          <button class="option">studies</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 6 -->
+      <div class="exercise">
+        <div class="question">
+          6. He ___ coffee in the morning.
+        </div>
+
+        <div class="options">
+          <button class="option">drink</button>
+          <button class="option" data-correct="true">drinks</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 7 -->
+      <div class="exercise">
+        <div class="question">
+          7. They ___ TV after dinner.
+        </div>
+
+        <div class="options">
+          <button class="option" data-correct="true">watch</button>
+          <button class="option">watches</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 8 -->
+      <div class="exercise">
+        <div class="question">
+          8. She ___ to work every day.
+        </div>
+
+        <div class="options">
+          <button class="option">go</button>
+          <button class="option" data-correct="true">goes</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 9 -->
+      <div class="exercise">
+        <div class="question">
+          9. ___ you eat breakfast every day?
+        </div>
+
+        <div class="options">
+          <button class="option">Are</button>
+          <button class="option" data-correct="true">Do</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 10 -->
+      <div class="exercise">
+        <div class="question">
+          10. ___ she tired?
+        </div>
+
+        <div class="options">
+          <button class="option" data-correct="true">Is</button>
+          <button class="option">Does</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 11 -->
+      <div class="exercise">
+        <div class="question">
+          11. He ___ up at 6 AM.
+        </div>
+
+        <div class="options">
+          <button class="option">wake</button>
+          <button class="option" data-correct="true">wakes</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 12 -->
+      <div class="exercise">
+        <div class="question">
+          12. We ___ English together.
+        </div>
+
+        <div class="options">
+          <button class="option" data-correct="true">study</button>
+          <button class="option">studies</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 13 -->
+      <div class="exercise">
+        <div class="question">
+          13. Complete: I brush my ___ every morning.
+        </div>
+
+        <input type="text" data-answer="teeth">
+        <button class="check">Check</button>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 14 -->
+      <div class="exercise">
+        <div class="question">
+          14. Complete: She ___ TV at night.
+        </div>
+
+        <input type="text" data-answer="watches">
+        <button class="check">Check</button>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 15 -->
+      <div class="exercise">
+        <div class="question">
+          15. Negative:
+          “He likes coffee.”
+        </div>
+
+        <input type="text" data-answer="he doesn't like coffee">
+        <button class="check">Check</button>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 16 -->
+      <div class="exercise">
+        <div class="question">
+          16. Transform into a question:
+          “She studies English.”
+        </div>
+
+        <input type="text" data-answer="does she study english">
+        <button class="check">Check</button>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 17 -->
+      <div class="exercise">
+        <div class="question">
+          17. Choose the correct sentence:
+        </div>
+
+        <div class="options">
+          <button class="option">He go to work.</button>
+          <button class="option" data-correct="true">
+            He goes to work.
+          </button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 18 -->
+      <div class="exercise">
+        <div class="question">
+          18. She ___ a shower before work.
+        </div>
+
+        <div class="options">
+          <button class="option">take</button>
+          <button class="option" data-correct="true">takes</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 19 -->
+      <div class="exercise">
+        <div class="question">
+          19. They ___ dinner at 7 PM.
+        </div>
+
+        <div class="options">
+          <button class="option" data-correct="true">eat</button>
+          <button class="option">eats</button>
+        </div>
+
+        <div class="feedback"></div>
+      </div>
+
+      <!-- 20 -->
+      <div class="exercise">
+        <div class="question">
+          20. Complete:
+          I wake up at 8 AM but I only ___ up at 9 AM.
+        </div>
+
+        <input type="text" data-answer="get">
+        <button class="check">Check</button>
+
+        <div class="feedback"></div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="final">
+    <h2>Great job, Evellyn ✦</h2>
+
+    <p>
+      Today you practiced daily routines, simple present,
+      conjugation and interpretation.
+      Now read the dialogue out loud one more time.
+    </p>
+  </section>
+
+</div>
+
+<script>
+
+const total = 20;
+let completed = 0;
+
+function updateProgress(){
+  const percent = Math.round((completed / total) * 100);
+
+  document.getElementById('progressText').innerText =
+  `${completed} / ${total} completed`;
+
+  document.getElementById('percent').innerText =
+  `${percent}%`;
+
+  document.getElementById('fill').style.width =
+  `${percent}%`;
+}
+
+document.querySelectorAll('.option').forEach(button=>{
+
+  button.addEventListener('click', ()=>{
+
+    const parent = button.parentElement;
+    const feedback = parent.parentElement.querySelector('.feedback');
+
+    if(parent.classList.contains('done')) return;
+
+    if(button.dataset.correct === "true"){
+
+      button.classList.add('correct');
+      feedback.innerHTML = "✅ Correct!";
+      feedback.style.color = "var(--green)";
+
+      parent.classList.add('done');
+      completed++;
+      updateProgress();
+
+    }else{
+
+      button.classList.add('wrong');
+      feedback.innerHTML = "❌ Try again.";
+      feedback.style.color = "var(--red)";
+    }
+
+  });
+
+});
+
+document.querySelectorAll('.check').forEach(btn=>{
+
+  btn.addEventListener('click', ()=>{
+
+    const exercise = btn.parentElement;
+
+    if(exercise.classList.contains('done')) return;
+
+    const input = exercise.querySelector('input');
+
+    const answer =
+    input.dataset.answer
+    .trim()
+    .toLowerCase();
+
+    const value =
+    input.value
+    .trim()
+    .toLowerCase();
+
+    const feedback = exercise.querySelector('.feedback');
+
+    if(value === answer){
+
+      feedback.innerHTML = "✅ Correct!";
+      feedback.style.color = "var(--green)";
+
+      exercise.classList.add('done');
+
+      completed++;
+      updateProgress();
+
+    }else{
+
+      feedback.innerHTML = "❌ Try again.";
+      feedback.style.color = "var(--red)";
+    }
+
+  });
+
+});
+
+updateProgress();
+
+</script>
+
+</body>
+</html>
